@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Fluidux",
-    "slug": "Fluidux",
+    "name": "fluidux-mobile",
+    "slug": "fluidux-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
