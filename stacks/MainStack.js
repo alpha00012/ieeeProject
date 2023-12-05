@@ -7,6 +7,7 @@ import colors from "../assets/colors.json";
 import AddValve from "../screens/AddValve";
 import Notifications from "../screens/Notifications";
 import EditProfile from '../screens/EditProfile';
+import Shop from '../screens/Shop';
 
 const Drawer = createDrawerNavigator();
 
@@ -46,6 +47,7 @@ const MainDrawer = () => {
             <Drawer.Screen name="Notifications" component={Notifications}/>
             <Drawer.Screen name="Profile" component={Profile}/>
             <Drawer.Screen name="EditProfile" component={EditProfile}/>
+            <Drawer.Screen name="Shop" component={Shop}/>
         </Drawer.Navigator>
     );
 };
