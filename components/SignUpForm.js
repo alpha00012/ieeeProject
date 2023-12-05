@@ -1,36 +1,134 @@
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import colors from "../assets/colors.json";
+import React, { useState } from "react";
 
-const SignUpForm = ({navigation}) => {
+
+
+const SignUpForm = ({ navigation }) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [name, setName] = useState(''); // Added for user's name
+    const [error, setError] = useState('');
+    const [errorColor, setErrorColor] = useState('#FF0000');
+
+    const handleSignUp = async () => {
+      // Perform validation here if needed
+  
+      // Check if passwords match
+      if (password !== confirmPassword) {
+        setError('Passwords do not match');
+        setErrorColor('#FF0000');
+        return;
+      }
+      
+       // Check if the email is in a valid format
+  const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  if (!emailRegex.test(email)) {
+    setError('Invalid email format');
+    setErrorColor('#FF0000');
+    alert('Invalid email format');
+    return;
+  }
+
+  // Clear previous error messages
+  setError('');
+
+      // Create a user object to send to the backend
+      const user = {
+        email: email,
+        password: password,
+        name: 'user', // Use the user's name from the input field
+      };
+  
+      console.log('Request payload:', user);
+  
+      // Make a POST request to your Django backend
+      const baseUrl = 'http://192.168.1.143:8000';
+  
+      try {
+        const response = await fetch(`${baseUrl}/api/users/create/`, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(user), // Simplify the body part
+        });
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+  
+        const responseData = await response.json();
+        console.log(JSON.stringify(responseData));
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+  
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Create new account</Text>
-            <View style={styles.inputs}>
-                <View>
-                    <Text style={styles.label}>Email</Text>
-                    <View style={styles.input}>
-                        <TextInput placeholderTextColor={colors.placeholder} placeholder="Email" style={styles.inputText}/>
-                    </View>
-                </View>
-                <View>
-                    <Text style={styles.label}>Password</Text>
-                    <View style={styles.input}>
-                        <TextInput placeholderTextColor={colors.placeholder} placeholder="Password" style={styles.inputText} secureTextEntry={true}/>
-                    </View>
-                </View>
-                <View>
-                    <Text style={styles.label}>Confirm Password</Text>
-                    <View style={styles.input}>
-                        <TextInput placeholderTextColor={colors.placeholder} placeholder="Confirm Password" style={styles.inputText} secureTextEntry={true}/>
-                    </View>
-                </View>
+      <View style={styles.container}>
+        <Text style={styles.title}>Create new account</Text>
+        <View style={styles.inputs}>
+          <View>
+            <Text style={styles.label}>Email</Text>
+            <View style={styles.input}>
+              <TextInput
+                placeholderTextColor={colors.placeholder}
+                placeholder="Email"
+                style={styles.inputText}
+                onChangeText={(text) => setEmail(text)}
+              />
             </View>
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("MainStack")}>
-                <Text style={styles.buttonText}>Sign up</Text>
-            </TouchableOpacity>
+          </View>
+          <View>
+            <Text style={styles.label}>Password</Text>
+            <View style={styles.input}>
+              <TextInput
+                placeholderTextColor={colors.placeholder}
+                placeholder="Password"
+                style={styles.inputText}
+                secureTextEntry={true}
+                onChangeText={(text) => setPassword(text)}
+              />
+            </View>
+          </View>
+          <View>
+            <Text style={styles.label}>Confirm Password</Text>
+            <View style={styles.input}>
+              <TextInput
+                placeholderTextColor={colors.placeholder}
+                placeholder="Confirm Password"
+                style={styles.inputText}
+                secureTextEntry={true}
+                onChangeText={(text) => setConfirmPassword(text)}
+              />
+            </View>
+          </View>
+          {/* <View>
+            <Text style={styles.label}>Name</Text>
+            <View style={styles.input}>
+              <TextInput
+                placeholderTextColor={colors.placeholder}
+                placeholder="Name"
+                style={styles.inputText}
+                onChangeText={(text) => setName(text)}
+              />
+            </View>
+          </View> */}
+          {error ? <Text style={{ ...styles.errorText, color: errorColor }}>{error}</Text> : null}
         </View>
-    )
-}
+        <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+          <Text style={styles.buttonText}>Sign up</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+  
+  
+
+
 
 const styles = StyleSheet.create({
     container: {
