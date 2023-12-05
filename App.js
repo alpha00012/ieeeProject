@@ -18,6 +18,7 @@ import AuthStack from "./stacks/AuthStack";
 import MainStack from "./stacks/MainStack";
 import {Text} from "react-native";
 
+import UserProvider from "./UserProvider";
 export default function App() {
     const Stack = createStackNavigator();
     let [fontsLoaded] = useFonts({
@@ -39,6 +40,7 @@ export default function App() {
     return (
         <SafeAreaProvider>
             <NavigationContainer>
+            <UserProvider>
                 <Stack.Navigator
                     // Initial route to load
                     initialRouteName="GetStarted"
@@ -52,6 +54,7 @@ export default function App() {
                     {/* Main Stack Contains Other Pages */}
                     <Stack.Screen name="MainStack" component={MainStack} />
                 </Stack.Navigator>
+                </UserProvider>
             </NavigationContainer>
         </SafeAreaProvider>
     );
